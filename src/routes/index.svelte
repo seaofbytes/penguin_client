@@ -1,5 +1,5 @@
 <script context="module">
-  import { baseUrl, headers } from "../helpers/backend";
+  import { baseUrl, headers, getUserFromLocalStorage } from "../helpers/backend";
 
   // Fetch before rendering
   export async function load({ page }) {
@@ -9,7 +9,6 @@
     });
 
     const data = await res.json();
-    console.log(`data`, data.data);
     return { props: { posts: data.data } };
   }
 </script>
@@ -17,6 +16,13 @@
 <script>
   // Imports
   import Post from "../components/Post.svelte";
+  import { onMount } from "svelte";
+
+  export let loggedIn = false;
+
+  onMount(() => {
+    loggedIn = getUserFromLocalStorage();
+  });
 
   // Vars
   export let searchTerm;
@@ -28,15 +34,18 @@
 </svelte:head>
 
 <div class="py-4 grid gap-4 md:grid-cols-1 px-40 grid-cols-1">
-  <span class="icon cursor-pointer"
-    ><a href="/new"><i class="far fa-plus-square hover:animate-pulse" /></a></span
-  >
+  {#if loggedIn}
+    <span class="icon cursor-pointer"
+      ><a href="/new"><i class="far fa-plus-square hover:animate-pulse" /></a></span
+    >
+  {/if}
   <input
     class="w-full rounded-md text-lg p-4 border-2 border-gray-200"
     bind:value={searchTerm}
     placeholder="Search for penguins.."
   />
   <h1 class="text-4xl text-center my-8 uppercase">Peenguin Feed</h1>
+
   {#each posts as post}
     <Post post={post.attributes} />
   {/each}

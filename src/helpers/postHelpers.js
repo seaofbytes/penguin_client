@@ -15,12 +15,12 @@ export async function createNewPost(postData) {
   try {
     const res = await fetch(`${baseUrl}/api/v1/posts`, {
       method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${window.localStorage.getItem("pToken")}`,
-      },
-      body: JSON.stringify({ post: postData }),
+      // headers: {
+      //   Accept: "application/json",
+      //   "Content-Type": "application/json",
+      //   Authorization: `Bearer ${window.localStorage.getItem("pToken")}`,
+      // },
+      body: postData,
     });
 
     const data = await res.json();
